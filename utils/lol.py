@@ -2,6 +2,7 @@ import requests
 import random
 import os
 from dotenv import load_dotenv
+from utils.util import champion_by_lane
 
 load_dotenv()
 LOL_API_KEY = os.getenv('LOL_API_KEY')
@@ -44,9 +45,16 @@ class Lol(LolSettings):
         return response.json()[0]
 
 class LolInfo():
-    def exotico(self):
+    def exotico(self, lane=None):
         url = 'https://ddragon.leagueoflegends.com/cdn/13.22.1/data/en_US/champion.json'
         response = requests.get(url)
         champion_data = response.json()['data']
-        random_champion = random.choice(list(champion_data.values()))
+
+        if lane:
+            champions_in_lane = champion_by_lane(lane)
+            valid_champions = {key: value for key, value in champion_data.items() if key in champions_in_lane}
+        else:
+            valid_champions = champion_data
+
+        random_champion = random.choice(list(valid_champions.values()))
         return random_champion

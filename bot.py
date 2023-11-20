@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import os
 from dotenv import load_dotenv
-
+import re
 from utils.lol import Lol, LolInfo
 from utils.util import roman_to_int
 
@@ -70,35 +70,36 @@ async def rank(ctx, summoner: str, region: str):
 
 
 @bot.command(description='Select a random peak')
-async def exotico(ctx, member:discord.Member = None):
+async def exotico(ctx, member:discord.Member = None, lane:str = None):
     if member == None:
         member = ctx.author
 
     nameAuthor = member.display_name
 
     lol = LolInfo()
-    exoticPeak = lol.exotico()
 
-    name = exoticPeak['name']
-    attack = exoticPeak['info']['attack']
-    defense = exoticPeak['info']['defense']
-    magic = exoticPeak['info']['magic']
-    difficulty = exoticPeak['info']['difficulty']
-    tags = exoticPeak['tags']
-    tags_str = ', '.join(tags).replace("'", '')
+    for i in range(0,3):
+        exoticPeak = lol.exotico(lane)
+        name = exoticPeak['name']
+        name_clean = clean_name(name)
+        difficulty = exoticPeak['info']['difficulty']
+        tags = exoticPeak['tags']
+        tags_str = ', '.join(tags).replace("'", '')
 
-    url = f'https://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{name}.png'
+        url = f'https://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{name_clean}.png'
 
-    emb = discord.Embed(title=f'{name}', description=f'A ver si tienes cojones a ganar con {name}', colour=discord.Colour.random())
-    emb.set_author(name=f'Jugador: {nameAuthor}')
-    emb.set_thumbnail(url=url)
-    emb.add_field(name='Roles Asociados', value=f'{tags_str}')
-    emb.add_field(name='Info Básica', value='', inline=False)
-    emb.insert_field_at(index=2, name='Ataque', value=f'{attack}')
-    emb.insert_field_at(index=3, name='Defensa', value=f'{defense}', inline=True)
-    emb.insert_field_at(index=4, name='Magia', value=f'{magic}')
-    emb.insert_field_at(index=5, name='Dificultad', value=f'{difficulty}')
+        # Bot writes the champion card
+        emb = discord.Embed(title=f'Pick {i+1}: {name}', description=f'A ver si tienes cojones a ganar con {name}', colour=discord.Colour.random())
+        emb.set_author(name=f'Jugador: {nameAuthor}')
+        emb.set_thumbnail(url=url)
+        emb.add_field(name='Roles Asociados', value=f'{tags_str}')
+        emb.insert_field_at(index=1, name='Dificultad', value=f'{difficulty}')
 
-    await ctx.send(embed=emb)
+        await ctx.send(embed=emb)
+
+
+def clean_name(name):
+    name_clean = re.sub(r"['. ]", '', name)
+    return name_clean
 
 bot.run(DISCORD_API_KEY)
