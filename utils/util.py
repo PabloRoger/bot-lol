@@ -8,7 +8,7 @@ def roman_to_int(num: str) -> int:
     }
     return roman_numbers[num]
 
-def champion_by_lane(lane):
+def champion_by_lane(lane:str = None):
     position = {
         'support': ['Galio', 'Poppy', 'Zac', 'Shen', 'Heimerdinger', 'Veigar', 'Ziggs', 'Twitch', 'Ashe', 'Miss Fortune', 'Teemo', 'Gragas', "Cho'Gath", 'Anivia', 'Annie', 'LeBlanc', 'Lissandra', 'Neeko', 'Zoe', 'Amumu', 'Fiddlesticks', 'Ivern', 'Nidalee', 'Tahm Kench', 'Seraphine', 'Swain', 'Zilean', 'Brand', 'Morgana', 'Malphite', 'Pantheon', 'Lux', "Vel'Koz", 'Xerath', 'Rell', 'Maokai', 'Shaco', 'Alistar', 'Bard', 'Blitzcrank', 'Braum', 'Janna', 'Karma', 'Leona', 'Lulu', 'Milio', 'Nami', 'Nautilus', 'Pyke', 'Rakan', 'Renata Glasc', 'Senna', 'Sett', 'Sona', 'Soraka', 'Taric', 'Thresh', 'Yuumi', 'Zyra'],
         'adc': ['Cassiopeia', 'Tahm Kench', 'Karthus', 'Heimerdinger', 'Akshan', 'Corki', 'Veigar', 'Lucian', "Kog'Maw", 'Seraphine', 'Tristana', 'Ziggs', 'Swain', 'Yasuo', 'Twitch', 'Aphelios', 'Ashe', 'Caitlyn', 'Draven', 'Ezreal', 'Jhin', 'Jinx', "Kai'Sa", 'Kalista', 'Miss Fortune', 'Nilah', 'Samira', 'Sivir', 'Varus', 'Vayne', 'Xayah', 'Zeri'],

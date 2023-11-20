@@ -20,7 +20,6 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
 
-
 @bot.command(descrption='Show all the commands')
 async def helpMe(ctx, member:discord.Member = None):
     if member == None:
@@ -68,7 +67,6 @@ async def rank(ctx, summoner: str, region: str):
     emb.insert_field_at(index=2, name='L', value=losses)
     await ctx.send(embed=emb)
 
-
 @bot.command(description='Select a random peak')
 async def exotico(ctx, member:discord.Member = None, lane:str = None):
     if member == None:
@@ -97,7 +95,50 @@ async def exotico(ctx, member:discord.Member = None, lane:str = None):
 
         await ctx.send(embed=emb)
 
+@bot.command(description='New exotic team')
+async def equipoExotico(ctx):
+    lol = LolInfo()
 
+    position = ['top', 'jungla', 'mid', 'adc', 'support']
+    team = []
+
+    # Add champion info to team array
+    for pos in position:
+        exoticPeak = lol.exotico(pos)
+        name = exoticPeak['name']
+        name_clean = clean_name(name)
+        difficulty = exoticPeak['info']['difficulty']
+
+        champion_info = {
+            'name': name,
+            'name_clean': name_clean,
+            'difficulty': difficulty,
+            'position': pos
+        }
+
+        team.append(champion_info)
+
+    # Create champion card
+    # TODO: MODIFY BOT MESSAGE TO SEND ONLY ONE WITH 5 CHAMP DATA
+    for i, champion in enumerate(team):
+        emb = discord.Embed(
+            title=f'💥 Equipo Exótico | Pick {i+1}',
+            colour=discord.Colour.random()
+        )
+
+        name = champion['name']
+        url = f'https://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{champion["name_clean"]}.png'
+        difficulty = champion['difficulty']
+
+        emb.set_thumbnail(url=url)
+        emb.insert_field_at(index=0, name='Nombre', value=champion['name'], inline=True)
+        emb.insert_field_at(index=1, name='Posición', value=champion['position'], inline=True)
+        emb.insert_field_at(index=2, name='Dificultad', value=f'{difficulty}', inline=True)
+
+        await ctx.send(embed=emb)
+        emb.clear_fields()
+
+# Aux Functions
 def clean_name(name):
     name_clean = re.sub(r"['. ]", '', name)
     return name_clean
